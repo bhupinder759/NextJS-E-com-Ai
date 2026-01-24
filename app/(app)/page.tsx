@@ -1,4 +1,7 @@
-import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { CategoryTiles } from "@/components/LandingPage/CategoryTiles";
+import { FeaturedCarousel } from "@/components/LandingPage/FeaturedCarousel";
+import { FeaturedCarouselSkeleton } from "@/components/LandingPage/FeaturedCarouselSkeleton";
+import { ProductSection } from "@/components/LandingPage/ProductSection";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/queries/categories";
 
@@ -24,7 +27,7 @@ interface PageProps {
   }>;
 }
 
-export default async function Home({ searchParams}: PageProps) {
+export default async function Home({ searchParams }: PageProps) {
   const params = await searchParams;
 
   const searchQuery = params.q ?? "";
@@ -82,15 +85,44 @@ export default async function Home({ searchParams}: PageProps) {
   return (
     <div>
       {/* Feature Products Carousel */}
-      <Suspense fallback={<div>Loading...</div>}>
-      <FeaturedCarousel products={featuredProducts} />
+      <Suspense
+        fallback={
+          <div>
+            <FeaturedCarouselSkeleton></FeaturedCarouselSkeleton>
+          </div>
+        }
+      >
+        <FeaturedCarousel products={featuredProducts} />
       </Suspense>
 
       {/* Page banner */}
+      {/* Page Banner */}
+      <div className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            Shop {categorySlug ? categorySlug : "All Products"}
+          </h1>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+            Premium furniture for your home
+          </p>
+        </div>
 
-      {/* Category Tiles */}
+        {/* Category Tiles - Full width */}
+        <div className="mt-6">
+          <CategoryTiles
+            categories={categories}
+            activeCategory={categorySlug || undefined}
+          />
+        </div>
+      </div>
 
-      {/* Products Section  */}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <ProductSection
+          categories={categories}
+          products={products}
+          searchQuery={searchQuery}
+        />
+      </div>
     </div>
   );
 }
