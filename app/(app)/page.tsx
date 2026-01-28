@@ -124,5 +124,5 @@ export default async function Home({ searchParams }: PageProps) {
         />
       </div>
     </div>
-  );
+  );                
 }
